@@ -52,7 +52,6 @@ class SonarScanner implements Serializable {
             }
         } else if (branchAnalysisConfiguration == BranchAnalysisConfiguration.AUTO) {
             // no-op
-            sonarCommand += ""
         }
 
         String projectVersion = computeProjectVersion()
