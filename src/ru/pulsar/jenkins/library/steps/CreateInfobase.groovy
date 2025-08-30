@@ -31,7 +31,10 @@ class CreateInfobase implements Serializable {
         } else if (templateDBPath.endsWith('.1CD')) {
             // Это файл базы данных 1С, просто скопируем его.
             String pathToInfobase = "$env.WORKSPACE/build/ib/1Cv8.1CD"
+            Logger.println("Начинаем копировать файл БД из ${templateDBPath} в ${pathToInfobase}")
             FileUtils.loadFile(templateDBPath, env, pathToInfobase)
+            Logger.println("Завершено копирование файла БД в ${pathToInfobase}")
+
         } else if (templateDBPath.endsWith('.dt')) {
             // Это файл дампа БД, скопируем его и создадим БД.
             String pathToDt = "$env.WORKSPACE/build/tmp/dump.dt"
