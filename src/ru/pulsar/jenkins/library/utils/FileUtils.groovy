@@ -56,6 +56,12 @@ class FileUtils {
             // If the path is a local file, copy the file
             String localPath = getAbsolutePath(filePathFrom, env)
             FilePath localFilePath = getFilePath(localPath)
+            
+            // Определяем размер в Мб
+            long sizeInBytes = localFilePath.length()
+            BigDecimal sizeInMb = sizeInBytes / (1024.0 * 1024.0)
+
+            Logger.println("Копирование файла размером ${sizeInMb} функцией copyFrom из ${filePathFrom} в ${filePathTo}")
             localPathToFile.copyFrom(localFilePath)
         }
     }
