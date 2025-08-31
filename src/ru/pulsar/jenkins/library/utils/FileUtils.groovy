@@ -57,12 +57,18 @@ class FileUtils {
             String localPath = getAbsolutePath(filePathFrom, env)
             FilePath localFilePath = getFilePath(localPath)
             
+            // * Новый код с условием работы с большими файлами
+            // ранее был только localPathToFile.copyFrom(localFilePath)
             // Определяем размер в Мб
             long sizeInBytes = localFilePath.length()
             BigDecimal sizeInMb = sizeInBytes / (1024.0 * 1024.0)
 
-            Logger.println("Копирование файла размером ${sizeInMb} функцией copyFrom из ${filePathFrom} в ${filePathTo}")
-            localPathToFile.copyFrom(localFilePath)
+            Logger.println("Копирование файла размером ${sizeInMb} Мб функцией copyFrom из ${filePathFrom} в ${filePathTo}")
+            if (sizeInMb > 3000) {
+                copyWithSystemTools(localFilePath, localPathToFile)
+            } else {
+                localPathToFile.copyFrom(localFilePath)
+            }          
         }
     }
 
@@ -82,4 +88,28 @@ class FileUtils {
             return "${env.WORKSPACE}/${path}"
         }
     }
+
+    private static void copyWithSystemTools(FilePath source, FilePath target) {
+        
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+
+        if (steps.isUnix()) {
+            // Используем rsync для Linux
+            String encoding = 'UTF-8'
+            steps.sh("rsync -av --progress ${source.remote} ${target.remote}", false, false , encoding)
+        } else {
+            // Используем robocopy для Windows
+            String nameSource = source.getName()
+            FilePath parentDir = source.getParent()
+            String sourceDirectoryPath = parentDir.getRemote()
+            
+            FilePath targetParentDir = source.getParent()
+            String targetDirectoryPath = targetParentDir.getRemote()
+            
+            String commandCopy =  "robocopy ${sourceDirectoryPath} ${targetDirectoryPath} ${nameSource} /E /Z /MT:8 /R:3 /W:10"
+            Logger.println("Вызов команды копирования: ${commandCopy}")
+            steps.cmd(commandCopy)
+        }
+    }
+
 }
