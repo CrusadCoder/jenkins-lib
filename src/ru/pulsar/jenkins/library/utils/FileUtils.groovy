@@ -72,6 +72,22 @@ class FileUtils {
         }
     }
 
+    /**
+    * Проверяет существование файла отладки debug_ci.cfg в каталоге, где лежит эталонная база
+    * @param templateDBPath полный путь к файлу базы (dt иил 1CD)
+    * @return true если файл существует, false если не существует
+    */
+    static boolean isFileDebugExists(String templateDBPath) {
+        
+        FilePath pathTemplateDBPath = getFilePath(templateDBPath)
+        FilePath templateDbParentDir = pathTemplateDBPath.getParent()
+        String dirTemplateDbParentDir = templateDbParentDir.getRemote()
+        String pathFileDebug = "$dirTemplateDbParentDir/debug_ci.cfg"    
+        FilePath debugPathFile = getFilePath(pathFileDebug)
+        
+        return debugPathFile.exists()    
+    }
+
     private static boolean isValidUrl(String url) {
         try {
             new URL(url).toURI()
@@ -103,7 +119,7 @@ class FileUtils {
             FilePath parentDir = source.getParent()
             String sourceDirectoryPath = parentDir.getRemote()
             
-            FilePath targetParentDir = source.getParent()
+            FilePath targetParentDir = target.getParent()
             String targetDirectoryPath = targetParentDir.getRemote()
             
             String commandCopy =  "robocopy ${sourceDirectoryPath} ${targetDirectoryPath} ${nameSource} /E /Z /MT:8 /R:3 /W:10"

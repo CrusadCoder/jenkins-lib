@@ -6,6 +6,8 @@ import ru.pulsar.jenkins.library.configuration.SourceFormat
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
+import hudson.FilePath
+import ru.pulsar.jenkins.library.utils.FileUtils
 
 class InitFromFiles implements Serializable {
 
@@ -25,7 +27,14 @@ class InitFromFiles implements Serializable {
             return
         }
 
-
+        // * Каратаев Олег - Возможность отладки по наличию файла
+        String templateDBPath = config.initInfoBaseOptions.templateDBPath
+        if (FileUtils.isFileDebugExists(templateDBPath)) {
+           Logger.println("Пропуск этапа. Найден файл отладки debug_ci.cfg")
+           return
+        }
+        // *
+     
         Logger.println("Распаковка файлов")
 
         String srcDir

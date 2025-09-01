@@ -33,19 +33,30 @@ class EdtToDesignerFormatTransformation implements Serializable {
             Logger.println("SRC is not in EDT format. No transform is needed.")
             return
         }
-
+      
         def env = steps.env();
 
         String workspaceDir = FileUtils.getFilePath("$env.WORKSPACE/$WORKSPACE").getRemote()
+        Logger.println("Очистка каталога $workspaceDir")
         steps.deleteDir(workspaceDir)
 
+    
         def engine = EdtCliEngineFactory.getEngine(config.edtVersion)
-
-        engine.edtToDesignerTransformConfiguration(steps, config)
-        steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
-        steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
-
+        
+        // * Каратаев Олег - Возможность пропуска этапа по наличию файла отладки
+        String templateDBPath = config.initInfoBaseOptions.templateDBPath
+        if (FileUtils.isFileDebugExists(templateDBPath)) {
+           Logger.println("Пропуск конвертации конфигурации из ЕДТ в формат конфигуратора. Найден файл отладки debug_ci.cfg")
+        } else {
+           // Конвертация конфигурации из ЕДТ в формат конфигуратора.
+            engine.edtToDesignerTransformConfiguration(steps, config)
+            steps.zip(CONFIGURATION_DIR, CONFIGURATION_ZIP)
+            steps.stash(CONFIGURATION_ZIP_STASH, CONFIGURATION_ZIP)
+        }
+        // *
+   
         if (config.needLoadExtensions()) {
+            //  Конвертация расширений из ЕДТ в формат конфигуратора.
             engine.edtToDesignerTransformExtensions(steps, config)
             steps.zip(EXTENSION_DIR, EXTENSION_ZIP)
             steps.stash(EXTENSION_ZIP_STASH, EXTENSION_ZIP)
