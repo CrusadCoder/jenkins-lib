@@ -6,6 +6,8 @@ import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.VRunner
+import hudson.FilePath
+import ru.pulsar.jenkins.library.utils.FileUtils
 
 class InitInfoBase implements Serializable {
 
@@ -26,6 +28,16 @@ class InitInfoBase implements Serializable {
             Logger.println("Init step is disabled")
             return
         }
+
+        // * Каратаев Олег - Возможность пропуска этапа по наличию файла отладки
+        String templateDBPath = config.initInfoBaseOptions.templateDBPath
+        if (FileUtils.isFileDebugExists(templateDBPath)) {
+           Logger.println("Пропуск этапа. Найден файл отладки debug_ci.cfg")
+           steps.stash('init-allure', 'build/out/allure/**', true)
+           steps.stash('init-cucumber', 'build/out/cucumber/**', true)
+           return
+        }
+        // *
 
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
