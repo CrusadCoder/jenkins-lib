@@ -122,9 +122,16 @@ class FileUtils {
             FilePath targetParentDir = target.getParent()
             String targetDirectoryPath = targetParentDir.getRemote()
             
-            String commandCopy =  "robocopy ${sourceDirectoryPath} ${targetDirectoryPath} ${nameSource} /E /Z /MT:8 /R:3 /W:10"
+            String commandCopy =  "robocopy ${sourceDirectoryPath} ${targetDirectoryPath} ${nameSource} /E /Z /MT:8 /R:3 /W:10"            
+            String script = """@echo off
+                chcp 65001 > nul
+                robocopy "${sourceDirectoryPath}" "${targetDirectoryPath}" "${nameSource}" /E /Z /MT:8 /R:3 /W:10 > nul
+                if errorlevel 1 (
+                    exit /b 0
+                )"""
+            steps.bat(script, false, true, 'UTF-8')
+            
             Logger.println("Вызов команды копирования: ${commandCopy}")
-            steps.cmd(commandCopy)
         }
     }
 
