@@ -29,7 +29,14 @@ class InitInfoBase implements Serializable {
             return
         }
 
-        // * Каратаев Олег - Возможность пропуска этапа по наличию файла отладки
+        // * Каратаев Олег
+        def env = steps.env();
+
+        String workspaceAllure = FileUtils.getFilePath("$env.WORKSPACE/build/out/allure").getRemote()
+        Logger.println("Очистка каталога Allure: $workspaceAllure")
+        steps.deleteDir(workspaceAllure)        
+        
+        //  Возможность пропуска этапа по наличию файла отладки.
         String templateDBPath = config.initInfoBaseOptions.templateDBPath
         if (FileUtils.isFileDebugExists(templateDBPath)) {
            Logger.println("Пропуск этапа. Найден файл отладки debug_ci.cfg")
