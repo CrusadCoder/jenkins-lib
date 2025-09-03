@@ -44,7 +44,11 @@ class EdtToDesignerFormatTransformation implements Serializable {
         def engine = EdtCliEngineFactory.getEngine(config.edtVersion)
         
         // * Каратаев Олег - Возможность пропуска этапа по наличию файла отладки
+        // Инициализация файлов пропусков этапов и помещение их в стейдж       
         String templateDBPath = config.initInfoBaseOptions.templateDBPath
+        FileUtils.isFileDebugExists(templateDBPath, "skip_ci_sonar.cfg")
+        FileUtils.isFileDebugExists(templateDBPath, "skip_ci_syntax.cfg")
+ 
         if (FileUtils.isFileDebugExists(templateDBPath, "debug_ci.cfg")) {
            Logger.println("Пропуск конвертации конфигурации из ЕДТ в формат конфигуратора. Найден файл отладки debug_ci.cfg")
         } else {

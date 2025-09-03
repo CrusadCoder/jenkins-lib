@@ -63,8 +63,9 @@ class FileUtils {
             long sizeInBytes = localFilePath.length()
             BigDecimal sizeInMb = sizeInBytes / (1024.0 * 1024.0)
 
-            Logger.println("Копирование файла размером ${sizeInMb} Мб функцией copyFrom из ${filePathFrom} в ${filePathTo}")
+            Logger.println("Копирование файла размером ${sizeInMb} Мб функцией FileUtils.loadFile из ${filePathFrom} в ${filePathTo}")
             if (sizeInMb > 3000) {
+                Logger.println("Размер файла большего допустимых 3000 Мб (текущий размер ${sizeInMb} Мб) -> копирование через функцию copyWithSystemTools вместо copyFrom")
                 copyWithSystemTools(localFilePath, localPathToFile)
             } else {
                 localPathToFile.copyFrom(localFilePath)
@@ -73,20 +74,45 @@ class FileUtils {
     }
 
     /**
-    * Проверяет существование файла отладки debug_ci.cfg в каталоге, где лежит эталонная база
+    * Проверяет существование файла отладки nameFileSkip в каталоге, где лежит эталонная база
     * @param templateDBPath полный путь к файлу базы (dt иил 1CD)
-    * @param nameFileSkip имя файла для пропуска
+    * @param nameFileSkip имя файла для пропуска (варианты: debug_ci.cfg, skip_ci_syntax.cfg, skip_ci_sonar.cfg)
     * @return true если файл существует, false если не существует
     */
     static boolean isFileDebugExists(String templateDBPath, String nameFileSkip) {
         
+        IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+        def env = steps.env()
+
         FilePath pathTemplateDBPath = getFilePath(templateDBPath)
         FilePath templateDbParentDir = pathTemplateDBPath.getParent()
         String dirTemplateDbParentDir = templateDbParentDir.getRemote()
         String pathFileDebug = "$dirTemplateDbParentDir/$nameFileSkip"    
-        FilePath debugPathFile = getFilePath(pathFileDebug)
         
-        return debugPathFile.exists()    
+        Boolean debugPathFileExists = steps.fileExists(pathFileDebug) 
+        String pathToFileDebug = "$env.WORKSPACE/build/$nameFileSkip"
+        if (steps.fileExists(pathToFileDebug)) {
+            // Удаляем старый вариант файла с прошлой обработки.
+            FilePath fileForDelete = getFilePath(pathToFileDebug)
+            fileForDelete.delete()  
+        }     
+
+        if (debugPathFileExists) {
+            // Копируем в build текущего workspace
+            loadFile(pathFileDebug, env, pathToFileDebug)
+        } else {
+            try {
+                steps.unstash(nameFileSkip)
+                debugPathFileExists = steps.fileExists(pathToFileDebug)
+            } catch (Exception ignored) {
+                Logger.println("stash пустой по $nameFileSkip")
+                debugPathFileExists = false
+            }  
+        }
+        // Фиксируем в стейдже даже если файла нет
+        steps.stash(nameFileSkip, "build/$nameFileSkip", true)
+ 
+        return debugPathFileExists    
     }
 
     private static boolean isValidUrl(String url) {
