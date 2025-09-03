@@ -38,7 +38,7 @@ class InitInfoBase implements Serializable {
         
         //  Возможность пропуска этапа по наличию файла отладки.
         String templateDBPath = config.initInfoBaseOptions.templateDBPath
-        if (FileUtils.isFileDebugExists(templateDBPath)) {
+        if (FileUtils.isFileDebugExists(templateDBPath, "debug_ci.cfg")) {
            Logger.println("Пропуск этапа. Найден файл отладки debug_ci.cfg")
            steps.stash('init-allure', 'build/out/allure/**', true)
            steps.stash('init-cucumber', 'build/out/cucumber/**', true)

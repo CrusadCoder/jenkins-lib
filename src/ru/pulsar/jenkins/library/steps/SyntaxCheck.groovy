@@ -28,6 +28,15 @@ class SyntaxCheck {
             return
         }
 
+        // * Каратаев Олег - Возможность пропуска этапа по наличию файла
+        String nameFileSkip = "skip_ci_syntax.cfg"
+        String templateDBPath = config.initInfoBaseOptions.templateDBPath
+        if (FileUtils.isFileDebugExists(templateDBPath, nameFileSkip)) {
+           Logger.println("Пропуск этапа. Найден файл отладки $nameFileSkip")
+           return
+        }
+        // *
+
         def env = steps.env()
 
         def options = config.syntaxCheckOptions

@@ -45,7 +45,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
         
         // * Каратаев Олег - Возможность пропуска этапа по наличию файла отладки
         String templateDBPath = config.initInfoBaseOptions.templateDBPath
-        if (FileUtils.isFileDebugExists(templateDBPath)) {
+        if (FileUtils.isFileDebugExists(templateDBPath, "debug_ci.cfg")) {
            Logger.println("Пропуск конвертации конфигурации из ЕДТ в формат конфигуратора. Найден файл отладки debug_ci.cfg")
         } else {
            // Конвертация конфигурации из ЕДТ в формат конфигуратора.

@@ -29,7 +29,7 @@ class InitFromFiles implements Serializable {
 
         // * Каратаев Олег - Возможность пропуска этапа по наличию файла отладки
         String templateDBPath = config.initInfoBaseOptions.templateDBPath
-        if (FileUtils.isFileDebugExists(templateDBPath)) {
+        if (FileUtils.isFileDebugExists(templateDBPath, "debug_ci.cfg")) {
            Logger.println("Пропуск этапа. Найден файл отладки debug_ci.cfg")
            return
         }

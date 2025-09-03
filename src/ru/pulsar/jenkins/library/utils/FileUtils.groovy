@@ -75,14 +75,15 @@ class FileUtils {
     /**
     * Проверяет существование файла отладки debug_ci.cfg в каталоге, где лежит эталонная база
     * @param templateDBPath полный путь к файлу базы (dt иил 1CD)
+    * @param nameFileSkip имя файла для пропуска
     * @return true если файл существует, false если не существует
     */
-    static boolean isFileDebugExists(String templateDBPath) {
+    static boolean isFileDebugExists(String templateDBPath, String nameFileSkip) {
         
         FilePath pathTemplateDBPath = getFilePath(templateDBPath)
         FilePath templateDbParentDir = pathTemplateDBPath.getParent()
         String dirTemplateDbParentDir = templateDbParentDir.getRemote()
-        String pathFileDebug = "$dirTemplateDbParentDir/debug_ci.cfg"    
+        String pathFileDebug = "$dirTemplateDbParentDir/$nameFileSkip"    
         FilePath debugPathFile = getFilePath(pathFileDebug)
         
         return debugPathFile.exists()    

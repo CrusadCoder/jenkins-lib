@@ -9,6 +9,7 @@ import ru.pulsar.jenkins.library.ioc.ContextRegistry
 import ru.pulsar.jenkins.library.utils.Logger
 import ru.pulsar.jenkins.library.utils.StringJoiner
 import ru.pulsar.jenkins.library.utils.VersionParser
+import ru.pulsar.jenkins.library.utils.FileUtils
 
 class SonarScanner implements Serializable {
 
@@ -28,6 +29,15 @@ class SonarScanner implements Serializable {
             return
         }
 
+        // * Каратаев Олег - Возможность пропуска этапа по наличию файла
+        String nameFileSkip = "skip_ci_sonar.cfg"
+        String templateDBPath = config.initInfoBaseOptions.templateDBPath
+        if (FileUtils.isFileDebugExists(templateDBPath, nameFileSkip)) {
+           Logger.println("Пропуск этапа. Найден файл отладки $nameFileSkip")
+           return
+        }
+        // *
+        
         def env = steps.env()
 
         def sonarScannerBinary
