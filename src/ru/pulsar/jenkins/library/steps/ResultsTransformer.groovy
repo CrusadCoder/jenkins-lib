@@ -67,9 +67,14 @@ class ResultsTransformer implements Serializable {
             srcDir = FileUtils.getFilePath("$env.WORKSPACE/$config.srcDir")
 
             def projectName = srcDir.getName()
+            
             def srcDirExceptLast = srcDir.getParent()
+            
+            // Формируем относительный путь к файлу проекта . Пример: если srcDirExceptLast с:/проект/src и нужно по итогу получить: ./src
+            def srcDirExceptLastFPath = FileUtils.getFilePath("$srcDirExceptLast") 
+            def srcDirExceptLastLocal = FileUtils.getLocalPath("$srcDirExceptLastFPath") 
 
-            steps.cmd("edt-ripper parse $edtValidateFile $srcDirExceptLast $projectName $env.WORKSPACE/$RESULT_FILE")
+            steps.cmd("edt-ripper parse $edtValidateFile $srcDirExceptLastLocal $projectName $env.WORKSPACE/$RESULT_FILE")
 
         }
 
