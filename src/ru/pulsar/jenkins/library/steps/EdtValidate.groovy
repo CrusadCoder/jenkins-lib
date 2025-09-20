@@ -11,7 +11,7 @@ import ru.pulsar.jenkins.library.utils.Logger
 class EdtValidate implements Serializable {
 
     public static final String RESULT_STASH = 'edt-validate'
-    public static final String RESULT_FILE = 'build/out/edt-validate.out'
+    public static final String RESULT_FILE = 'build/out/edt-validate/edt-validate.out'
 
     private final JobConfiguration config
 

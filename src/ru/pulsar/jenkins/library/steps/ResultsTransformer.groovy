@@ -13,7 +13,7 @@ import java.nio.file.Paths
 class ResultsTransformer implements Serializable {
 
     public static final String RESULT_STASH = 'edt-issues'
-    public static final String RESULT_FILE = 'build/out/edt-issues.json'
+    public static final String RESULT_FILE = 'build/out/edt-validate/edt-issues.json'
 
     private final JobConfiguration config
 
@@ -81,9 +81,10 @@ class ResultsTransformer implements Serializable {
         steps.stash(RESULT_STASH, RESULT_FILE)
 
         // Архивируем результат в отдельный архив и отправляем в артефакты.
+        def resultDir = FileUtils.getFilePath("edtValidateFile").getParent()
         String archivePath = "edt-validate-ResultForSonar.zip"
         Boolean archiveArtifacts = true
-        steps.zip("$RESULT_FILE", archivePath, '', archiveArtifacts)
+        steps.zip("$resultDir", archivePath, '', archiveArtifacts)
 
     }
 }
