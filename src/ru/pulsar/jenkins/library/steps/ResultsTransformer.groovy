@@ -70,17 +70,20 @@ class ResultsTransformer implements Serializable {
             
             def srcDirExceptLast = srcDir.getParent()
             
-           // Формируем относительный путь к файлу проекта . Пример: если srcDirExceptLast с:/проект/src и нужно по итогу получить: ./src
+            // Формируем относительный путь к файлу проекта . Пример: если srcDirExceptLast с:/проект/src и нужно по итогу получить: ./src
             def srcDirExceptLastFilePath = FileUtils.getFilePath("$srcDirExceptLast")
             String srcDirExceptLastLocal = FileUtils.getLocalPath(srcDirExceptLastFilePath) 
             srcDirExceptLastLocal = "./$srcDirExceptLastLocal"
 
             steps.cmd("edt-ripper parse $edtValidateFile $srcDirExceptLastLocal $projectName $env.WORKSPACE/$RESULT_FILE")
-
         }
 
-        steps.archiveArtifacts(RESULT_FILE)
         steps.stash(RESULT_STASH, RESULT_FILE)
+
+        // Архивируем результат в отдельный архив и отправляем в артефакты.
+        String archivePath = "edt-validate-ResultForSonar.zip"
+        Boolean archiveArtifacts = true
+        steps.zip("$RESULT_FILE", archivePath, '', archiveArtifacts)
 
     }
 }
