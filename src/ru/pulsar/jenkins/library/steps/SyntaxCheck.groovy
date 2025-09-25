@@ -65,11 +65,13 @@ class SyntaxCheck {
             }
 
             if (options.publishToJUnitReport) {
+                steps.deleteDir(junitReportDir) 
                 steps.createDir(junitReportDir)
                 command += " --junitpath $pathToJUnitReport"
             }
 
             if (options.publishToAllureReport) {
+                steps.deleteDir(allureReportDir) 
                 steps.createDir(allureReportDir)
                 command += " --allure-results2 $allureReportDir"
             }
