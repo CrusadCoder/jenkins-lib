@@ -51,6 +51,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
  
         if (FileUtils.isFileDebugExists(templateDBPath, "debug_ci.cfg")) {
            Logger.println("Пропуск конвертации конфигурации из ЕДТ в формат конфигуратора. Найден файл отладки debug_ci.cfg")
+           return
         } else {
            // Конвертация конфигурации из ЕДТ в формат конфигуратора.
             engine.edtToDesignerTransformConfiguration(steps, config)
