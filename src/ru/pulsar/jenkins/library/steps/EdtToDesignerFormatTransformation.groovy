@@ -48,8 +48,8 @@ class EdtToDesignerFormatTransformation implements Serializable {
         String templateDBPath = config.initInfoBaseOptions.templateDBPath
         FileUtils.isFileDebugExists(templateDBPath, "skip_ci_sonar.cfg")
         FileUtils.isFileDebugExists(templateDBPath, "skip_ci_syntax.cfg")
- 
-        if (FileUtils.isFileDebugExists(templateDBPath, "debug_ci.cfg")) {
+        Boolean isFileDebug = FileUtils.isFileDebugExists(templateDBPath, "debug_ci.cfg")
+        if (isFileDebug) {
            Logger.println("Пропуск конвертации конфигурации из ЕДТ в формат конфигуратора. Найден файл отладки debug_ci.cfg")
         } else {
            // Конвертация конфигурации из ЕДТ в формат конфигуратора.
@@ -62,7 +62,7 @@ class EdtToDesignerFormatTransformation implements Serializable {
         if (config.needLoadExtensions()) {
             //  Конвертация расширений из ЕДТ в формат конфигуратора.
             // * Каратаев Олег - Возможность пропуска этапа по наличию файла отладки
-            if (FileUtils.isFileDebugExists(templateDBPath, "debug_ci.cfg")) {
+            if (isFileDebug) {
                 Logger.println("Пропуск конвертации расширений из ЕДТ в формат конфигуратора. Найден файл отладки debug_ci.cfg")
             } else {
                 engine.edtToDesignerTransformExtensions(steps, config)
