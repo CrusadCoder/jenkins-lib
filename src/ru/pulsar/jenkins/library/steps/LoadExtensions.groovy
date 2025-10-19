@@ -72,11 +72,13 @@ class LoadExtensions implements Serializable {
         }
         loadCommand += executeParameter
         loadCommand += ' --ibconnection "/F./build/ib"'
-
+        
+        Logger.println("Получим настройки vrunnerSettings")
         String vrunnerSettings = getVrunnerSettingsForStage(this.config, this.stageName)
         if (vrunnerSettings && steps.fileExists(vrunnerSettings)) {
             loadCommand += " --settings $vrunnerSettings"
         }
+        Logger.println("Подготовлена команда VRunner для запуска: $loadCommand")
 
         List<String> logosConfig = ["LOGOS_CONFIG=$config.logosConfig"]
         steps.withEnv(logosConfig) {
