@@ -156,9 +156,10 @@ class FileUtils {
                 if errorlevel 1 (
                     exit /b 0
                 )"""
-            steps.bat(script, false, true, 'UTF-8')
-            
             Logger.println("Вызов команды копирования: ${commandCopy}")
+            steps.bat(script, false, true, 'UTF-8')
+            Logger.println("Копирование завершено")
+          
         }
     }
 
