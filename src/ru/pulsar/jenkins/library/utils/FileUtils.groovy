@@ -139,6 +139,7 @@ class FileUtils {
         if (steps.isUnix()) {
             // Используем rsync для Linux
             String encoding = 'UTF-8'
+            steps.sh("mkdir -p ${target.remote}", false, false, encoding)
             steps.sh("rsync -av --progress ${source.remote} ${target.remote}", false, false , encoding)
         } else {
             // Используем robocopy для Windows
