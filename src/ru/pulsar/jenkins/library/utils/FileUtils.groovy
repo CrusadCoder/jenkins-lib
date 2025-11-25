@@ -135,20 +135,20 @@ class FileUtils {
     private static void copyWithSystemTools(FilePath source, FilePath target) {
         
         IStepExecutor steps = ContextRegistry.getContext().getStepExecutor()
+        
+        FilePath targetParentDir = target.getParent()
+        String targetDirectoryPath = targetParentDir.getRemote()
 
         if (steps.isUnix()) {
             // Используем rsync для Linux
             String encoding = 'UTF-8'
-            steps.sh("mkdir -p ${target.remote}", false, false, encoding)
+            steps.sh("mkdir -p ${targetDirectoryPath}", false, false, encoding)
             steps.sh("rsync -av --progress ${source.remote} ${target.remote}", false, false , encoding)
         } else {
             // Используем robocopy для Windows
             String nameSource = source.getName()
             FilePath parentDir = source.getParent()
             String sourceDirectoryPath = parentDir.getRemote()
-            
-            FilePath targetParentDir = target.getParent()
-            String targetDirectoryPath = targetParentDir.getRemote()
             
             String commandCopy =  "robocopy ${sourceDirectoryPath} ${targetDirectoryPath} ${nameSource} /E /Z /MT:8 /R:3 /W:10"            
             String script = """@echo off
