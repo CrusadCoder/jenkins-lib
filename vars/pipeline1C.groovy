@@ -42,6 +42,7 @@ void call() {
 
                 steps {
                     script {
+                        applyDebugOverridesIfNeeded()
                         config = jobConfiguration() as JobConfiguration
                         agent1C = config.v8AgentLabel()
                         agentEdt = config.edtAgentLabel()
@@ -80,6 +81,11 @@ void call() {
                                 }
 
                                 stages {
+                                    stage('Восстановление debug overrides') {
+                                        steps {
+                                            restoreDebugOverridesIfNeeded()
+                                        }
+                                    }
                                     stage('Сборка расширений из исходников') {
                                         when {
                                             expression { config.needLoadExtensions() }
@@ -218,6 +224,11 @@ void call() {
                             expression { config.stageFlags.bdd && isInfobaseInitialized }
                         }
                         stages {
+                            stage('Восстановление debug overrides') {
+                                steps {
+                                    restoreDebugOverridesIfNeeded()
+                                }
+                            }
                             stage('Распаковка ИБ') {
                                 steps {
                                      lock(resource: 'infobase_unzip_lock', quantity: 1) {
@@ -267,6 +278,11 @@ void call() {
                             expression { config.stageFlags.syntaxCheck }
                         }
                         stages {
+                            stage('Восстановление debug overrides') {
+                                steps {
+                                    restoreDebugOverridesIfNeeded()
+                                }
+                            }
                             stage('Распаковка ИБ') {
                                 steps {
                                      lock(resource: 'infobase_unzip_lock', quantity: 1) {
@@ -294,6 +310,11 @@ void call() {
                             expression { config.stageFlags.smoke && isInfobaseInitialized }
                         }
                         stages {
+                            stage('Восстановление debug overrides') {
+                                steps {
+                                    restoreDebugOverridesIfNeeded()
+                                }
+                            }
                             stage('Распаковка ИБ') {
                                 steps {
                                      lock(resource: 'infobase_unzip_lock', quantity: 1) {
@@ -333,6 +354,11 @@ void call() {
                             expression { config.stageFlags.yaxunit && isInfobaseInitialized }
                         }
                         stages {
+                            stage('Восстановление debug overrides') {
+                                steps {
+                                    restoreDebugOverridesIfNeeded()
+                                }
+                            }
                             stage('Распаковка ИБ') {
                                 steps {
                                      lock(resource: 'infobase_unzip_lock', quantity: 1) {
@@ -374,6 +400,7 @@ void call() {
                     expression { config.stageFlags.sonarqube }
                 }
                 steps {
+                    restoreDebugOverridesIfNeeded()
                     timeout(time: config.timeoutOptions.sonarqube, unit: TimeUnit.MINUTES) {
                         sonarScanner config
                     }
