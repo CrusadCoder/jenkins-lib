@@ -399,10 +399,18 @@ void call() {
                     beforeAgent true
                     expression { config.stageFlags.sonarqube }
                 }
-                steps {
-                    restoreDebugOverridesIfNeeded()
-                    timeout(time: config.timeoutOptions.sonarqube, unit: TimeUnit.MINUTES) {
-                        sonarScanner config
+                stages {
+                    stage('Восстановление debug overrides') {
+                        steps {
+                            restoreDebugOverridesIfNeeded()
+                        }
+                    }
+                    stage('Запуск SonarQube') {
+                        steps {
+                            timeout(time: config.timeoutOptions.sonarqube, unit: TimeUnit.MINUTES) {
+                                sonarScanner config
+                            }
+                        }
                     }
                 }
             }

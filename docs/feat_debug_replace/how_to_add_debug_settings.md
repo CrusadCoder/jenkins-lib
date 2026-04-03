@@ -187,6 +187,41 @@ Debug overrides: control file is unavailable, skip
 Debug overrides: Config File Provider plugin is unavailable, skip
 ```
 
+### Что искать в логах Jenkins
+Если профиль найден и подмена реально произошла, ищите такие строки:
+
+```text
+Debug overrides: resolved profile key = ci_uh_MR
+Debug overrides: applying 4 replacement(s)
+Debug overrides: wrote jobConfiguration.json from managed file debug-ci-uh-mr-jobConfiguration
+Debug overrides: wrote sonar-project.properties from managed file debug-ci-uh-mr-sonar-properties
+Debug overrides: wrote tools/vrunner.json from managed file debug-ci-uh-mr-vrunner
+Debug overrides: wrote tools/VAParams.json from managed file debug-ci-uh-mr-vaparams
+Debug overrides: stashed files for downstream agents
+```
+
+Если потом на другом Jenkins agent файлы были успешно восстановлены, будет строка:
+
+```text
+Debug overrides: restored files from stash
+```
+
+Если подмена не была применена, в логах будет один из вариантов:
+
+```text
+Debug overrides: profile ci_uh_MR not found, skip
+Debug overrides: profile ci_uh_MR is disabled, skip
+Debug overrides: control file is unavailable, skip
+Debug overrides: Config File Provider plugin is unavailable, skip
+Debug overrides: downstream stash is absent, skip restore
+```
+
+Содержимое самих файлов в лог не выводится. В логе виден только:
+- найденный профиль;
+- факт подмены;
+- `fileId`, из которого был взят файл;
+- факт восстановления файлов на downstream stages.
+
 ## На что обратить внимание
 - `fileId` в control JSON должен точно совпадать с `fileId` managed file в Jenkins.
 - `target` должен быть относительным путем внутри workspace.

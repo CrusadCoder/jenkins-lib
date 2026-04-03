@@ -24,6 +24,18 @@ class DebugOverridesTest {
   }
 
   @Test
+  void resolveProfileKey_returnsNullForNull() {
+    assertThat(DebugOverrides.resolveProfileKey(null))
+      .isNull();
+  }
+
+  @Test
+  void resolveProfileKey_returnsNullForEmptyString() {
+    assertThat(DebugOverrides.resolveProfileKey(""))
+      .isNull();
+  }
+
+  @Test
   void normalizeTarget_normalizesRelativePath() {
     assertThat(DebugOverrides.normalizeTarget(".\\tools\\vrunner.json"))
       .isEqualTo("tools/vrunner.json");
@@ -42,6 +54,12 @@ class DebugOverridesTest {
   }
 
   @Test
+  void validateTargetPath_rejectsUncPath() {
+    assertThatThrownBy(() -> DebugOverrides.validateTargetPath("//server/share/file.json"))
+      .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
   void validateDebugProfile_requiresReplacementFields() {
     Map<String, Object> replacement = new LinkedHashMap<>();
     replacement.put("target", "tools/vrunner.json");
@@ -52,6 +70,15 @@ class DebugOverridesTest {
 
     assertThatThrownBy(() -> DebugOverrides.validateDebugProfile(profile))
       .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void validateDebugProfile_acceptsValidProfile() {
+    Map<String, Object> profile = new LinkedHashMap<>();
+    profile.put("enabled", true);
+    profile.put("replacements", List.of(replacement("debug-1", "tools/vrunner.json")));
+
+    DebugOverrides.validateDebugProfile(profile);
   }
 
   @Test
@@ -79,6 +106,12 @@ class DebugOverridesTest {
     ));
 
     assertThat(targets).containsExactly("tools/vrunner.json", "sonar-project.properties");
+  }
+
+  @Test
+  void collectDownstreamTargets_returnsEmptyListForEmptyReplacements() {
+    assertThat(DebugOverrides.collectDownstreamTargets(List.of()))
+      .isEmpty();
   }
 
   @Test

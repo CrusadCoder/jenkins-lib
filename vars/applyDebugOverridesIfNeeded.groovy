@@ -10,12 +10,12 @@ boolean call() {
         return false
     }
 
+    echo "Debug overrides: resolved profile key = ${profileKey}"
+
     Map controlConfig = loadControlConfig()
     if (controlConfig == null) {
         return false
     }
-
-    echo "Debug overrides: resolved profile key = ${profileKey}"
 
     Map profile = controlConfig.profiles?."${profileKey}" as Map
     if (profile == null) {
