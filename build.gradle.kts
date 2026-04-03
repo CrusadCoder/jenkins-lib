@@ -1,4 +1,6 @@
 import com.mkobit.jenkins.pipelines.http.AnonymousAuthentication
+import org.gradle.api.tasks.compile.GroovyCompile
+import org.gradle.api.tasks.compile.JavaCompile
 
 plugins {
     java
@@ -27,6 +29,14 @@ tasks {
 
     processIntegrationTestResources {
         dependsOn("resolveIntegrationTestDependencies")
+	}
+
+    withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
+    }
+
+    withType<GroovyCompile>().configureEach {
+        groovyOptions.encoding = "UTF-8"
     }
 }
 

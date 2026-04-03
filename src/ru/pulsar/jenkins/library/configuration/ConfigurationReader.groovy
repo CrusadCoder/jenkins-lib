@@ -143,10 +143,20 @@ class ConfigurationReader implements Serializable {
 
     @NonCPS
     private static void mergeBddOptions(BddOptions baseObject, BddOptions objectToMerge) {
-        if (objectToMerge == null || objectToMerge.vrunnerSteps == null) {
+        if (objectToMerge == null) {
             return
         }
-        baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
+
+        if (objectToMerge.vrunnerSteps != null) {
+            baseObject.vrunnerSteps = objectToMerge.vrunnerSteps.clone()
+            return
+        }
+
+        if (objectToMerge.vrunnerSettings != null) {
+            // Reset explicit default steps from the base config so effectiveVrunnerSteps
+            // is recalculated from the merged vrunnerSettings value.
+            baseObject.vrunnerSteps = null
+        }
     }
 
     @NonCPS
