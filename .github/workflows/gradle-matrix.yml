@@ -1,5 +1,4 @@
-
-name: Gradle Check
+name: Gradle Matrix
 
 on:
   push:
@@ -11,7 +10,13 @@ permissions:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
 
     steps:
       - uses: actions/checkout@v6
@@ -22,5 +27,5 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-      - name: Run Gradle checks
-        run: ./gradlew check jacocoTestReport
+      - name: Run Gradle check
+        run: ./gradlew check
