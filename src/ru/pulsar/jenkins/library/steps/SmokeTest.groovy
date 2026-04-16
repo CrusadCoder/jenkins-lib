@@ -41,7 +41,7 @@ class SmokeTest implements Serializable, Coverable {
         def env = steps.env()
 
         String vrunnerPath = VRunner.getVRunnerPath()
-        String command = "$vrunnerPath xunit --ibconnection \"/F./build/ib\""
+        String command = "$vrunnerPath xunit --ibconnection \"/F ./build/ib\""
 
         String vrunnerSettings = options.vrunnerSettings
         if (steps.fileExists(vrunnerSettings)) {
