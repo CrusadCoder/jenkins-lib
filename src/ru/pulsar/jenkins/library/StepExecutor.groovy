@@ -10,7 +10,7 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
 import ru.pulsar.jenkins.library.configuration.JobConfiguration
 import ru.pulsar.jenkins.library.configuration.StepCoverageOptions
 import ru.pulsar.jenkins.library.steps.Coverable
-import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
+//import ru.yandex.qatools.allure.jenkins.config.ResultsConfig
 import sp.sd.fileoperations.FileOperation
 
 class StepExecutor implements IStepExecutor {
@@ -244,7 +244,7 @@ class StepExecutor implements IStepExecutor {
         steps.error errorMessage
     }
 
-    @Override
+    /*@Override
     def allure(List<String> results) {
         steps.allure([
             commandline: 'allure',
@@ -254,16 +254,16 @@ class StepExecutor implements IStepExecutor {
             reportBuildPolicy: 'ALWAYS',
             results: ResultsConfig.convertPaths(results)
         ])
-    }
+    }*/
     
-    /*@Override 
+    @Override 
     def allure(List<String> results) {
     def resultPaths = results.collect { [path: it] }
 
     steps.allure([
         results: resultPaths
     ])
-    }*/
+    }
 
     @Override
     def junit(String testResults, boolean allowEmptyResults) {
