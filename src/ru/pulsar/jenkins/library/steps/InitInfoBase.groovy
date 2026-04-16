@@ -77,8 +77,7 @@ class InitInfoBase implements Serializable {
             }
         }
 
-        //steps.stash('init-allure', 'build/out/allure/**', true)
-        stash name: 'init-allure', includes: 'build/out/allure/**', allowEmpty: true
+        steps.stash('init-allure', 'build/out/allure/**', true)
         steps.stash('init-cucumber', 'build/out/cucumber/**', true)
     }
 }
