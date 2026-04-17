@@ -54,13 +54,10 @@ class InitFromStorage implements Serializable {
         ]) {
             // ===== DEBUG =====
             Logger.println('===== STORAGE DEBUG =====')
-            Logger.println("Credentials ID USER: ${storageCredentials}")
-            Logger.println("Credentials ID PATH: ${storagePath}")
+            Logger.println("ENV USER: ${steps.env.RUNNER_STORAGE_USER}")
+            Logger.println("ENV PASS: ${steps.env.RUNNER_STORAGE_PWD != null ? 'SET' : 'NULL'}")
+            Logger.println("ENV STORAGE PATH: ${steps.env.RUNNER_STORAGE_NAME}")
 
-            Logger.println("ENV USER: ${env.RUNNER_STORAGE_USER}")
-            Logger.println("ENV PASS: ${env.RUNNER_STORAGE_PWD != null ? 'SET' : 'NULL'}")
-            Logger.println("ENV STORAGE PATH: ${env.RUNNER_STORAGE_NAME}")
-            
             Logger.println('Выполнение загрузки конфигурации из хранилища')
             String vrunnerPath = VRunner.getVRunnerPath()
             def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
