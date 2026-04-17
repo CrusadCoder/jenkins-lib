@@ -53,11 +53,8 @@ class InitFromStorage implements Serializable {
             )
         ])
         {
-            echo "Storage user: ${env.RUNNER_STORAGE_USER}"
-            echo "Storage path: ${env.RUNNER_STORAGE_NAME}"
-
-            // пароль Jenkins замаскирует, но можно проверить что он есть
-            echo "Password is set: ${env.RUNNER_STORAGE_PWD != null}"
+            echo "USER=${env.RUNNER_STORAGE_USER}"
+            echo "STORAGE=${env.RUNNER_STORAGE_NAME}"
         }
         {
             Logger.println('Выполнение загрузки конфигурации из хранилища')
