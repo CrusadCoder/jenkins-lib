@@ -54,9 +54,8 @@ class InitFromStorage implements Serializable {
         ]) {
             // ===== DEBUG =====
             Logger.println('===== STORAGE DEBUG =====')
-            Logger.println("ENV USER: ${steps.env.RUNNER_STORAGE_USER}")
-            Logger.println("ENV PASS: ${steps.env.RUNNER_STORAGE_PWD != null ? 'SET' : 'NULL'}")
-            Logger.println("ENV STORAGE PATH: ${steps.env.RUNNER_STORAGE_NAME}")
+            Logger.println("USER credential ID: ${storageCredentials}")
+            Logger.println("PATH credential ID: ${storagePath}")
 
             Logger.println('Выполнение загрузки конфигурации из хранилища')
             String vrunnerPath = VRunner.getVRunnerPath()
