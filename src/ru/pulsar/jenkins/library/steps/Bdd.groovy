@@ -42,7 +42,7 @@ class Bdd implements Serializable, Coverable {
                 config.bddOptions.vrunnerSteps.each {
                     Logger.println("Шаг запуска сценариев командой ${it}")
                     String vrunnerPath = VRunner.getVRunnerPath()
-                    Integer bddReturnStatus = VRunner.exec("$vrunnerPath ${it} --ibconnection \"/F./build/ib\"", true)
+                    Integer bddReturnStatus = VRunner.exec("$vrunnerPath ${it} --ibconnection /Fg:/Learning/otusArch/Jenkins/Storage, true)
                     returnStatuses.add(bddReturnStatus)
                 }
 
