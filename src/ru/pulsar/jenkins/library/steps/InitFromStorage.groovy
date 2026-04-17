@@ -27,20 +27,19 @@ class InitFromStorage implements Serializable {
         Logger.printLocation()
 
         if (config.infoBaseFromFiles()) {
-            Logger.println("init infoBase from storage is disabled")
+            Logger.println('init infoBase from storage is disabled')
             return
         }
 
-
         String storageVersion = VersionParser.storage()
-        String storageVersionParameter = storageVersion == "" ? "" : "--storage-ver $storageVersion"
+        String storageVersionParameter = storageVersion == '' ? '' : "--storage-ver $storageVersion"
 
         String repoSlug = RepoUtils.getRepoSlug()
 
         Secrets secrets = config.secrets
 
-        String storageCredentials = secrets.storage == UNKNOWN_ID ? repoSlug + "_STORAGE_USER" : secrets.storage
-        String storagePath = secrets.storagePath == UNKNOWN_ID ? repoSlug + "_STORAGE_PATH" : secrets.storagePath
+        String storageCredentials = secrets.storage == UNKNOWN_ID ? repoSlug + '_STORAGE_USER' : secrets.storage
+        String storagePath = secrets.storagePath == UNKNOWN_ID ? repoSlug + '_STORAGE_PATH' : secrets.storagePath
 
         steps.withCredentials([
             steps.usernamePassword(
@@ -52,8 +51,16 @@ class InitFromStorage implements Serializable {
                 storagePath,
                 'RUNNER_STORAGE_NAME'
             )
-        ]) {
-            Logger.println("Выполнение загрузки конфигурации из хранилища")
+        ])
+        {
+            echo "Storage user: ${env.RUNNER_STORAGE_USER}"
+            echo "Storage path: ${env.RUNNER_STORAGE_NAME}"
+
+            // пароль Jenkins замаскирует, но можно проверить что он есть
+            echo "Password is set: ${env.RUNNER_STORAGE_PWD != null}"
+        }
+        {
+            Logger.println('Выполнение загрузки конфигурации из хранилища')
             String vrunnerPath = VRunner.getVRunnerPath()
             def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
 
