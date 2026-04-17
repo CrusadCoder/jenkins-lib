@@ -66,7 +66,7 @@ class InitInfoBase implements Serializable {
                     files = files.sort new OrderBy( { it.name })
                     files.each {
                         Logger.println("Первичная инициализация файлом ${it.path}")
-                        VRunner.exec("$vrunnerPath vanessa --settings ${it.path} --ibconnection /Fg:/Learning/otusArch/Jenkins/Storage)
+                        VRunner.exec("$vrunnerPath vanessa --settings ${it.path} --ibconnection \"/F./build/ib\"")
                     }
                 } else {
                     options.additionalInitializationSteps.each {

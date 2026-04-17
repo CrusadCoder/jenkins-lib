@@ -46,7 +46,7 @@ class CreateInfobase implements Serializable {
     private void createBase(String dtPath = '') {
         Logger.println("Создание информационной базы")
         String vrunnerPath = VRunner.getVRunnerPath();
-        def initCommand = "$vrunnerPath init-dev  --ibconnection /Fg:/Learning/otusArch/Jenkins/Storage
+        def initCommand = "$vrunnerPath init-dev  --ibconnection \"/F./build/ib\""
         VRunner.exec(initCommand)
 
         if (dtPath) {

@@ -62,8 +62,7 @@ class InitFromStorage implements Serializable {
 
             Logger.println('Выполнение загрузки конфигурации из хранилища')
             String vrunnerPath = VRunner.getVRunnerPath()
-            //def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
-            def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection /Fg:/Learning/otusArch/Jenkins/Storage
+            def command = "$vrunnerPath update-dev --storage $storageVersionParameter --ibconnection \"/F./build/ib\""
 
             def options = config.initInfoBaseOptions
 
