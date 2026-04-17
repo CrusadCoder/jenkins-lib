@@ -53,6 +53,8 @@ class InitFromStorage implements Serializable {
             )
         ]) {
             // ===== DEBUG =====
+            def env = ContextRegistry.getContext().getCurrentBuild().getEnvironment()
+            
             Logger.println('===== STORAGE DEBUG =====')
             Logger.println("USER credential ID: ${storageCredentials}")
             Logger.println("PATH credential ID: ${storagePath}")
